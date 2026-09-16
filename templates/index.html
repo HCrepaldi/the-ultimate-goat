@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE EXTREME GOAT — Simulador Temporada a Temporada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .glass {
+            background: rgba(18, 18, 18, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .card-draft:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px -4px rgba(245, 158, 11, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-neutral-950 text-slate-100 min-h-screen font-sans flex flex-col items-center pb-12">
+
+    <!-- HUD FIXO NO TOPO (NBA 2K STYLE) -->
+    <header class="w-full sticky top-0 z-40 bg-black/90 border-b border-neutral-800 backdrop-blur-md px-4 py-2.5">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500 flex items-center justify-center font-black text-amber-400 text-base" id="hud-camisa">
+                    #23
+                </div>
+                <div>
+                    <div class="text-sm font-black uppercase text-white tracking-wide" id="hud-nome">Atleta</div>
+                    <div class="text-[11px] text-slate-400 flex items-center gap-2">
+                        <span id="hud-posicao">POS: --</span> • 
+                        <span class="text-amber-400 font-bold" id="hud-time">Sem Time</span> • 
+                        <span id="hud-idade">19 Anos</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="text-right hidden sm:block">
+                    <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Títulos 💍</div>
+                    <div class="text-xs font-black text-amber-400" id="hud-aneis">0 Anéis</div>
+                </div>
+                <div class="bg-gradient-to-br from-amber-500 to-amber-600 px-3 py-1.5 rounded-xl text-neutral-950 font-black flex flex-col items-center shadow-lg">
+                    <span class="text-[9px] uppercase tracking-tighter leading-none">OVR</span>
+                    <span class="text-base leading-none" id="hud-ovr">--</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-2xl px-4 mt-6">
+
+        <!-- ================= FASE 1: CRIAÇÃO DO ATLETA ================= -->
+        <div id="step-criacao" class="glass rounded-3xl p-6 shadow-2xl">
+            <div class="text-center mb-5">
+                <h2 class="text-2xl font-black uppercase text-white">Criar Seu Jogador</h2>
+                <p class="text-xs text-slate-400 mt-1">Defina sua identidade e posição antes do draft</p>
+            </div>
+
+            <div class="space-y-3.5 text-left">
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="col-span-2">
+                        <label class="text-xs font-bold text-slate-300 block mb-1">Nome:</label>
+                        <input type="text" id="input-nome" placeholder="Ex: Arthur Antetokounmpo" class="w-full bg-neutral-900 border border-neutral-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 font-semibold">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-300 block mb-1">Camisa #:</label>
+                        <input type="number" id="input-numero" min="0" max="99" value="23" class="w-full bg-neutral-900 border border-neutral-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 font-bold text-center">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-slate-300 block mb-1">Posição:</label>
+                    <div class="grid grid-cols-5 gap-1.5 text-center text-xs font-bold">
+                        <button type="button" onclick="selecionarPos('PG')" class="pos-btn bg-neutral-900 border border-neutral-700 py-2 rounded-xl" data-pos="PG">PG</button>
+                        <button type="button" onclick="selecionarPos('SG')" class="pos-btn bg-amber-500 text-neutral-950 py-2 rounded-xl" data-pos="SG">SG</button>
+                        <button type="button" onclick="selecionarPos('SF')" class="pos-btn bg-neutral-900 border border-neutral-700 py-2 rounded-xl" data-pos="SF">SF</button>
+                        <button type="button" onclick="selecionarPos('PF')" class="pos-btn bg-neutral-900 border border-neutral-700 py-2 rounded-xl" data-pos="PF">PF</button>
+                        <button type="button" onclick="selecionarPos('C')" class="pos-btn bg-neutral-900 border border-neutral-700 py-2 rounded-xl" data-pos="C">C</button>
+                    </div>
+                </div>
+
+                <button onclick="salvarIdentidade()" class="w-full mt-4 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3 rounded-xl uppercase text-sm transition shadow-lg">
+                    Próximo: Roubar Atributos dos Craques 🧬
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= FASE 2: ROUBO DE DNA ================= -->
+        <div id="step-dna" class="hidden glass rounded-3xl p-6 shadow-2xl">
+            <div class="text-center mb-4">
+                <h2 class="text-2xl font-black uppercase text-white">Roube o DNA dos Craques</h2>
+                <p class="text-xs text-slate-400 mt-1">Escolha 1 entre 4 lendas sorteadas por atributo</p>
+            </div>
+
+            <div class="space-y-2.5">
+                <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
+                    <div>
+                        <div class="text-[11px] font-bold text-amber-500">🎯 ARREMESSO</div>
+                        <div id="val-arremesso" class="text-xs text-slate-400">Pressione girar...</div>
+                    </div>
+                    <button onclick="abrirRoleta('arremesso', '🎯 Arremesso')" id="btn-arremesso" class="bg-amber-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
+                </div>
+                <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
+                    <div>
+                        <div class="text-[11px] font-bold text-sky-400">🧠 PLAYMAKING</div>
+                        <div id="val-playmaking" class="text-xs text-slate-400">Pressione girar...</div>
+                    </div>
+                    <button onclick="abrirRoleta('playmaking', '🧠 Playmaking')" id="btn-playmaking" class="bg-sky-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
+                </div>
+                <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
+                    <div>
+                        <div class="text-[11px] font-bold text-emerald-400">🔒 DEFESA</div>
+                        <div id="val-defesa" class="text-xs text-slate-400">Pressione girar...</div>
+                    </div>
+                    <button onclick="abrirRoleta('defesa', '🔒 Defesa')" id="btn-defesa" class="bg-emerald-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
+                </div>
+                <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
+                    <div>
+                        <div class="text-[11px] font-bold text-purple-400">🏀 REBOTES</div>
+                        <div id="val-rebotes" class="text-xs text-slate-400">Pressione girar...</div>
+                    </div>
+                    <button onclick="abrirRoleta('rebotes', '🏀 Rebotes')" id="btn-rebotes" class="bg-purple-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
+                </div>
+                <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
+                    <div>
+                        <div class="text-[11px] font-bold text-rose-500">⚡ FÍSICO</div>
+                        <div id="val-fisico" class="text-xs text-slate-400">Pressione girar...</div>
+                    </div>
+                    <button onclick="abrirRoleta('fisico', '⚡ Físico')" id="btn-fisico" class="bg-rose-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
+                </div>
+                <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
+                    <div>
+                        <div class="text-[11px] font-bold text-red-400">🐍 CLUTCH</div>
+                        <div id="val-clutch" class="text-xs text-slate-400">Pressione girar...</div>
+                    </div>
+                    <button onclick="abrirRoleta('clutch', '🐍 Clutch')" id="btn-clutch" class="bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
+                </div>
+            </div>
+
+            <button id="btn-iniciar-draft" onclick="iniciarDraft()" disabled class="w-full mt-4 bg-neutral-800 text-neutral-500 font-black py-3 rounded-xl uppercase text-sm cursor-not-allowed transition">
+                Gire os 6 Atributos Primeiro
+            </button>
+        </div>
+
+        <!-- ================= FASE 3: NOITE DO DRAFT ================= -->
+        <div id="step-draft" class="hidden glass rounded-3xl p-6 text-center shadow-2xl">
+            <span class="text-xs font-black text-amber-500 uppercase tracking-widest">NBA Draft Night</span>
+            <h2 class="text-2xl font-black text-white mt-1">Quem vai draftar você?</h2>
+            
+            <div class="bg-neutral-950 border border-neutral-800 rounded-2xl p-6 my-4">
+                <div id="draft-logo" class="text-5xl mb-2">🎰</div>
+                <div id="draft-time" class="text-xl font-extrabold text-white">Sorteando Franquia...</div>
+                <div id="draft-status" class="text-xs text-slate-400 mt-1">Aguarde o comissário...</div>
+            </div>
+
+            <button onclick="sortearDraft()" id="btn-roleta-draft" class="w-full bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3 rounded-xl uppercase text-sm transition">
+                Girar Draft 🏀
+            </button>
+            <button onclick="entrarNaLiga()" id="btn-entrar-liga" class="hidden w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl uppercase text-sm transition">
+                Entrar na NBA e Começar Ano 1 🚀
+            </button>
+        </div>
+
+        <!-- ================= FASE 4: O PAINEL DA TEMPORADA ATIVA ================= -->
+        <div id="step-temporada" class="hidden space-y-4">
+            <!-- Box da Temporada Atual -->
+            <div class="glass rounded-3xl p-5 shadow-2xl">
+                <div class="flex items-center justify-between border-b border-neutral-800 pb-3 mb-3">
+                    <div>
+                        <span class="text-xs font-bold text-amber-500 uppercase tracking-widest" id="temp-titulo">TEMPORADA 1 (2024-25)</span>
+                        <h3 class="text-lg font-black text-white" id="temp-time-nome">Time: Los Angeles Lakers</h3>
+                    </div>
+                    <button onclick="aposentarAgora()" class="bg-neutral-800 hover:bg-red-900 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                        Aposentar Carreira 🛑
+                    </button>
+                </div>
+
+                <!-- Botão Principal: Simular Temporada -->
+                <button onclick="simularAno()" id="btn-jogar-ano" class="w-full bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3.5 rounded-xl uppercase text-sm transition shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> Simular Temporada & Playoffs
+                </button>
+
+                <!-- Resultado do Ano (Aparece após simular) -->
+                <div id="resultado-ano-box" class="hidden mt-4 bg-neutral-950 border border-neutral-800 rounded-2xl p-4 text-left">
+                    <div class="text-xs font-black text-amber-400 uppercase tracking-wider mb-2">Relatório do Ano:</div>
+                    
+                    <!-- Médias -->
+                    <div class="grid grid-cols-4 gap-2 text-center mb-3">
+                        <div class="bg-neutral-900 p-2 rounded-lg">
+                            <div class="text-[10px] text-slate-400 font-bold">PPG (PTS)</div>
+                            <div class="text-base font-black text-white" id="stat-ppg">--</div>
+                        </div>
+                        <div class="bg-neutral-900 p-2 rounded-lg">
+                            <div class="text-[10px] text-slate-400 font-bold">RPG (REB)</div>
+                            <div class="text-base font-black text-purple-400" id="stat-rpg">--</div>
+                        </div>
+                        <div class="bg-neutral-900 p-2 rounded-lg">
+                            <div class="text-[10px] text-slate-400 font-bold">APG (AST)</div>
+                            <div class="text-base font-black text-sky-400" id="stat-apg">--</div>
+                        </div>
+                        <div class="bg-neutral-900 p-2 rounded-lg">
+                            <div class="text-[10px] text-slate-400 font-bold">CAMPANHA</div>
+                            <div class="text-base font-black text-emerald-400" id="stat-campanha">--</div>
+                        </div>
+                    </div>
+
+                    <!-- Prêmios e Playoffs -->
+                    <div class="text-xs space-y-1 text-slate-300">
+                        <div>🏅 <b>Prêmios Individuais:</b> <span id="stat-premios" class="text-amber-400 font-bold">--</span></div>
+                        <div>🏀 <b>Pós-temporada / Playoffs:</b> <span id="stat-playoffs" class="text-white font-bold">--</span></div>
+                    </div>
+
+                    <!-- Janela da Off-season (Mercado de Transferências) -->
+                    <div class="mt-4 pt-3 border-t border-neutral-800">
+                        <div class="text-xs font-black text-amber-500 uppercase tracking-wider mb-2">
+                            🏢 Off-season: Escolha onde jogar no próximo ano:
+                        </div>
+                        <div id="propostas-container" class="space-y-2">
+                            <!-- Gerado dinamicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela Histórica da Carreira -->
+            <div class="glass rounded-3xl p-5 shadow-2xl text-left">
+                <h4 class="text-xs font-black text-slate-300 uppercase tracking-wider mb-3">Histórico da Carreira (Ano a Ano)</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left text-slate-300">
+                        <thead class="text-[10px] uppercase bg-neutral-900 text-slate-400">
+                            <tr>
+                                <th class="p-2">Ano</th>
+                                <th class="p-2">Time</th>
+                                <th class="p-2">PPG</th>
+                                <th class="p-2">RPG</th>
+                                <th class="p-2">APG</th>
+                                <th class="p-2">Playoffs</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-historico" class="divide-y divide-neutral-800">
+                            <!-- Inserido dinamicamente a cada ano -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= FASE 5: CARD FINAL APÓS APOSENTADORIA ================= -->
+        <div id="step-card-final" class="hidden">
+            <div id="goat-card" class="bg-gradient-to-b from-neutral-900 via-black to-neutral-950 border-2 border-amber-500 rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
+                <div class="absolute -top-4 -right-2 text-amber-500/10 text-9xl font-black pointer-events-none select-none">GOAT</div>
+
+                <div class="flex items-center justify-between border-b border-neutral-800 pb-3 mb-3">
+                    <span class="text-[10px] font-black tracking-widest text-amber-500 uppercase">CARREIRA LENDÁRIA CONCLUÍDA</span>
+                    <span id="final-tier" class="px-2.5 py-0.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 text-xs font-bold rounded-full">...</span>
+                </div>
+
+                <div class="my-2">
+                    <h3 class="text-2xl font-black uppercase text-white tracking-wider" id="final-nome">Lucas Jordan</h3>
+                    <div class="text-xs font-bold text-slate-400" id="final-subinfo">#23 • SG • 18 Temporadas</div>
+                </div>
+
+                <div class="my-2">
+                    <div class="text-7xl font-black text-amber-400 tracking-tighter" id="final-ovr">--</div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">OVR Final</div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 text-left my-4">
+                    <div class="bg-neutral-950/80 p-2 rounded-xl border border-neutral-800">
+                        <div class="text-slate-400 text-[10px] font-bold">💍 ANÉIS</div>
+                        <div class="text-lg font-black text-amber-400" id="final-aneis">0</div>
+                    </div>
+                    <div class="bg-neutral-950/80 p-2 rounded-xl border border-neutral-800">
+                        <div class="text-slate-400 text-[10px] font-bold">🏆 MVPs</div>
+                        <div class="text-lg font-black text-amber-400" id="final-mvps">0</div>
+                    </div>
+                    <div class="bg-neutral-950/80 p-2 rounded-xl border border-neutral-800">
+                        <div class="text-slate-400 text-[10px] font-bold">🎖️ FINALS MVP</div>
+                        <div class="text-lg font-black text-amber-400" id="final-fmvp">0</div>
+                    </div>
+                    <div class="bg-neutral-950/80 p-2 rounded-xl border border-neutral-800">
+                        <div class="text-slate-400 text-[10px] font-bold">⭐ ALL-STAR</div>
+                        <div class="text-lg font-black text-amber-400" id="final-allstars">0</div>
+                    </div>
+                    <div class="bg-neutral-950/80 p-2 rounded-xl border border-neutral-800">
+                        <div class="text-slate-400 text-[10px] font-bold">🎯 PONTOS TOTAIS</div>
+                        <div class="text-lg font-black text-white" id="final-pontos">0</div>
+                    </div>
+                    <div class="bg-neutral-950/80 p-2 rounded-xl border border-neutral-800">
+                        <div class="text-slate-400 text-[10px] font-bold">🏛️ HALL DA FAMA</div>
+                        <div class="text-lg font-black text-emerald-400" id="final-hof">Sim</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 space-y-2">
+                <button onclick="baixarCard()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3.5 rounded-xl uppercase text-sm flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/30">
+                    <i class="fa-solid fa-download"></i> Baixar Card do GOAT (PNG)
+                </button>
+                <button onclick="reiniciar()" class="w-full bg-neutral-800 hover:bg-neutral-700 text-slate-300 font-bold py-2.5 rounded-xl text-sm transition">
+                    🔄 Começar Nova Carreira
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL THE FENÔMENO (ROULETTE 4 CRAQUES) -->
+        <div id="modal-roleta" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+            <div class="glass rounded-3xl p-5 max-w-lg w-full text-center shadow-2xl border border-amber-500/40">
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Escolha 1 entre os 4:</span>
+                <h3 id="modal-cat-nome" class="text-xl font-black text-amber-500 uppercase mt-1 mb-4">...</h3>
+                <div id="modal-cards-container" class="grid grid-cols-2 gap-3 mb-4"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const FRANQUIAS = {{ franquias | tojson }};
+        const buildAtributos = {};
+        let catAtual = "";
+        let posicaoEscolhida = "SG";
+
+        // Estado da Carreira
+        const player = {
+            nome: "Baller",
+            numero: 23,
+            posicao: "SG",
+            idade: 19,
+            temporada: 1,
+            time: "",
+            ovr: 75,
+            aneis: 0,
+            mvps: 0,
+            fmvps: 0,
+            allstars: 0,
+            pontosTotais: 0,
+            historico: []
+        };
+
+        function selecionarPos(pos) {
+            posicaoEscolhida = pos;
+            document.querySelectorAll(".pos-btn").forEach(b => {
+                if (b.dataset.pos === pos) {
+                    b.className = "pos-btn bg-amber-500 text-neutral-950 py-2 rounded-xl font-bold";
+                } else {
+                    b.className = "pos-btn bg-neutral-900 border border-neutral-700 py-2 rounded-xl text-slate-300 font-bold";
+                }
+            });
+        }
+
+        function salvarIdentidade() {
+            player.nome = document.getElementById("input-nome").value.trim() || "Extreme Baller";
+            player.numero = parseInt(document.getElementById("input-numero").value) || 23;
+            player.posicao = posicaoEscolhida;
+
+            document.getElementById("hud-nome").innerText = player.nome;
+            document.getElementById("hud-camisa").innerText = `#${player.numero}`;
+            document.getElementById("hud-posicao").innerText = `POS: ${player.posicao}`;
+
+            document.getElementById("step-criacao").classList.add("hidden");
+            document.getElementById("step-dna").classList.remove("hidden");
+        }
+
+        async function abrirRoleta(cat, titulo) {
+            catAtual = cat;
+            document.getElementById("modal-cat-nome").innerText = titulo;
+            const res = await fetch(`/api/sortear-opcoes/${cat}`);
+            const opcoes = await res.json();
+            const container = document.getElementById("modal-cards-container");
+            container.innerHTML = "";
+
+            opcoes.forEach(j => {
+                const card = document.createElement("div");
+                card.className = "card-draft bg-neutral-950 border border-neutral-700 hover:border-amber-500 p-3 rounded-xl cursor-pointer text-left transition flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="text-[11px] text-slate-400">${j.time}</div>
+                        <div class="text-sm font-extrabold text-white leading-tight">${j.nome}</div>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between border-t border-neutral-800 pt-1.5">
+                        <span class="text-[9px] uppercase font-bold text-slate-400">Atributo:</span>
+                        <span class="text-lg font-black text-amber-400">${j.valor}</span>
+                    </div>
+                `;
+                card.onclick = () => escolherCraque(j.nome, j.valor);
+                container.appendChild(card);
+            });
+
+            document.getElementById("modal-roleta").classList.remove("hidden");
+        }
+
+        function escolherCraque(nome, valor) {
+            buildAtributos[catAtual] = valor;
+            document.getElementById(`val-${catAtual}`).innerHTML = `<span class="text-white font-bold">${nome}</span> (${valor})`;
+            const btn = document.getElementById(`btn-${catAtual}`);
+            btn.disabled = true;
+            btn.innerText = "✓";
+
+            document.getElementById("modal-roleta").classList.add("hidden");
+
+            const stats = Object.values(buildAtributos);
+            if (stats.length === 6) {
+                player.ovr = Math.round(stats.reduce((a, b) => a + b, 0) / 6);
+                document.getElementById("hud-ovr").innerText = player.ovr;
+                const btnDraft = document.getElementById("btn-iniciar-draft");
+                btnDraft.disabled = false;
+                btnDraft.className = "w-full mt-4 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3 rounded-xl uppercase text-sm cursor-pointer transition shadow-lg";
+                btnDraft.innerText = "🏀 ENTRAR NO DRAFT DA NBA";
+            }
+        }
+
+        function iniciarDraft() {
+            document.getElementById("step-dna").classList.add("hidden");
+            document.getElementById("step-draft").classList.remove("hidden");
+        }
+
+        function sortearDraft() {
+            const btn = document.getElementById("btn-roleta-draft");
+            btn.disabled = true;
+            let c = 0;
+            const anim = setInterval(() => {
+                const f = FRANQUIAS[Math.floor(Math.random() * FRANQUIAS.length)];
+                document.getElementById("draft-logo").innerText = f.logo;
+                document.getElementById("draft-time").innerText = f.nome;
+                document.getElementById("draft-status").innerText = f.status;
+                c++;
+                if (c > 12) {
+                    clearInterval(anim);
+                    const escolhida = FRANQUIAS[Math.floor(Math.random() * FRANQUIAS.length)];
+                    document.getElementById("draft-logo").innerText = escolhida.logo;
+                    document.getElementById("draft-time").innerText = escolhida.nome;
+                    document.getElementById("draft-status").innerText = `Draftado com a 1ª escolha!`;
+                    player.time = escolhida.nome;
+                    document.getElementById("hud-time").innerText = player.time;
+                    btn.classList.add("hidden");
+                    document.getElementById("btn-entrar-liga").classList.remove("hidden");
+                }
+            }, 100);
+        }
+
+        function entrarNaLiga() {
+            document.getElementById("step-draft").classList.add("hidden");
+            document.getElementById("step-temporada").classList.remove("hidden");
+            atualizarPainelTemporada();
+        }
+
+        function atualizarPainelTemporada() {
+            document.getElementById("temp-titulo").innerText = `TEMPORADA ${player.temporada} (Ano ${player.temporada})`;
+            document.getElementById("temp-time-nome").innerText = `Franquia Atual: ${player.time}`;
+            document.getElementById("hud-time").innerText = player.time;
+            document.getElementById("hud-idade").innerText = `${player.idade} Anos`;
+            document.getElementById("hud-aneis").innerText = `${player.aneis} Anéis`;
+            document.getElementById("hud-ovr").innerText = player.ovr;
+            document.getElementById("resultado-ano-box").classList.add("hidden");
+            document.getElementById("btn-jogar-ano").classList.remove("hidden");
+        }
+
+        async function simularAno() {
+            const reqPayload = {
+                idade: player.idade,
+                temporada_num: player.temporada,
+                ovr: player.ovr,
+                posicao: player.posicao,
+                time_atual: player.time,
+                arremesso: buildAtributos.arremesso,
+                playmaking: buildAtributos.playmaking,
+                defesa: buildAtributos.defesa,
+                rebotes: buildAtributos.rebotes,
+                fisico: buildAtributos.fisico,
+                clutch: buildAtributos.clutch
+            };
+
+            const res = await fetch("/api/simular-ano", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(reqPayload)
+            });
+            const data = await res.json();
+
+            // Atualiza Player
+            player.idade = data.novo_idade;
+            player.ovr = data.novo_ovr;
+            player.pontosTotais += data.pts_totais_ano;
+            if (data.campeao) player.aneis += 1;
+            if (data.finals_mvp) player.fmvps += 1;
+            if (data.mvp) player.mvps += 1;
+            if (data.all_star) player.allstars += 1;
+
+            // Renderiza Box do Ano
+            document.getElementById("stat-ppg").innerText = data.ppg;
+            document.getElementById("stat-rpg").innerText = data.rpg;
+            document.getElementById("stat-apg").innerText = data.apg;
+            document.getElementById("stat-campanha").innerText = data.campanha;
+
+            const premios = [];
+            if (data.mvp) premios.push("🏆 MVP da Liga");
+            if (data.all_star) premios.push("⭐ All-Star");
+            document.getElementById("stat-premios").innerText = premios.length ? premios.join(" | ") : "Nenhum prêmio este ano";
+            document.getElementById("stat-playoffs").innerText = data.resumo_playoff;
+
+            // Propostas de Transferência
+            const propContainer = document.getElementById("propostas-container");
+            propContainer.innerHTML = "";
+
+            data.propostas_offseason.forEach(p => {
+                const btn = document.createElement("button");
+                btn.className = "w-full bg-neutral-900 border border-neutral-700 hover:border-amber-500 p-2.5 rounded-xl text-left flex items-center justify-between transition";
+                btn.innerHTML = `
+                    <div>
+                        <div class="text-xs font-extrabold text-white">${p.time}</div>
+                        <div class="text-[10px] text-slate-400">${p.status}</div>
+                    </div>
+                    <div class="text-xs font-black text-amber-400">${p.salario}</div>
+                `;
+                btn.onclick = () => escolherDestino(p.time);
+                propContainer.appendChild(btn);
+            });
+
+            // Insere na Tabela Histórica
+            const tabela = document.getElementById("tabela-historico");
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td class="p-2 font-bold">Ano ${player.temporada}</td>
+                <td class="p-2">${player.time}</td>
+                <td class="p-2 font-black text-white">${data.ppg}</td>
+                <td class="p-2 text-purple-400">${data.rpg}</td>
+                <td class="p-2 text-sky-400">${data.apg}</td>
+                <td class="p-2 ${data.campeao ? 'text-amber-400 font-black' : 'text-slate-400'}">${data.campeao ? '🏆 Campeão' : 'Eliminado'}</td>
+            `;
+            tabela.prepend(tr);
+
+            document.getElementById("btn-jogar-ano").classList.add("hidden");
+            document.getElementById("resultado-ano-box").classList.remove("hidden");
+        }
+
+        function escolherDestino(novoTime) {
+            player.time = novoTime;
+            player.temporada += 1;
+            atualizarPainelTemporada();
+        }
+
+        function aposentarAgora() {
+            document.getElementById("step-temporada").classList.add("hidden");
+            
+            const legado = (player.aneis * 35) + (player.mvps * 35) + (player.fmvps * 20) + (player.allstars * 8) + (player.ovr * 1.5);
+            const hof = legado >= 180 || (player.aneis >= 3 && player.mvps >= 1);
+
+            document.getElementById("final-nome").innerText = player.nome;
+            document.getElementById("final-subinfo").innerText = `#${player.numero} • ${player.posicao} • ${player.temporada - 1} Temporadas`;
+            document.getElementById("final-ovr").innerText = player.ovr;
+            document.getElementById("final-aneis").innerText = player.aneis;
+            document.getElementById("final-mvps").innerText = player.mvps;
+            document.getElementById("final-fmvp").innerText = player.fmvps;
+            document.getElementById("final-allstars").innerText = player.allstars;
+            document.getElementById("final-pontos").innerText = player.pontosTotais.toLocaleString('pt-BR');
+            document.getElementById("final-hof").innerText = hof ? "SIM! 🏆" : "Não ❌";
+
+            let tier = "JOGADOR DE ROTAÇÃO";
+            if (legado >= 360) tier = "👑 GOAT SUPREMO DA NBA";
+            else if (legado >= 260) tier = "⭐ LENDA HISTÓRICA";
+            else if (hof) tier = "🏛️ HALL DA FAMA";
+            else if (player.allstars >= 4) tier = "🔥 ALL-STAR CONSAGRADO";
+
+            document.getElementById("final-tier").innerText = tier;
+            document.getElementById("step-card-final").classList.remove("hidden");
+        }
+
+        function baixarCard() {
+            const card = document.getElementById("goat-card");
+            html2canvas(card, { scale: 2, backgroundColor: "#000000" }).then(canvas => {
+                const a = document.createElement("a");
+                a.download = `${player.nome}-ExtremeGOAT.png`;
+                a.href = canvas.toDataURL("image/png");
+                a.click();
+            });
+        }
+
+        function reiniciar() {
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
