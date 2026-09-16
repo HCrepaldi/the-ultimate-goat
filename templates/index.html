@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE EXTREME GOAT — Simulador Temporada a Temporada</title>
+    <title>THE EXTREME GOAT — Simulador de Carreira NBA</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas para download do card em imagem -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- FontAwesome Ícones -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .glass {
-            background: rgba(18, 18, 18, 0.88);
+            background: rgba(18, 18, 18, 0.90);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
@@ -21,7 +24,7 @@
 </head>
 <body class="bg-neutral-950 text-slate-100 min-h-screen font-sans flex flex-col items-center pb-12">
 
-    <!-- HUD FIXO NO TOPO (NBA 2K STYLE) -->
+    <!-- HUD SUPERIOR FIXO (NBA 2K STYLE) -->
     <header class="w-full sticky top-0 z-40 bg-black/90 border-b border-neutral-800 backdrop-blur-md px-4 py-2.5">
         <div class="max-w-4xl mx-auto flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -29,9 +32,9 @@
                     #23
                 </div>
                 <div>
-                    <div class="text-sm font-black uppercase text-white tracking-wide" id="hud-nome">Atleta</div>
+                    <div class="text-sm font-black uppercase text-white tracking-wide" id="hud-nome">Crie Seu Craque</div>
                     <div class="text-[11px] text-slate-400 flex items-center gap-2">
-                        <span id="hud-posicao">POS: --</span> • 
+                        <span id="hud-posicao">POS: SG</span> • 
                         <span class="text-amber-400 font-bold" id="hud-time">Sem Time</span> • 
                         <span id="hud-idade">19 Anos</span>
                     </div>
@@ -76,14 +79,14 @@
                     <label class="text-xs font-bold text-slate-300 block mb-1">Posição:</label>
                     <div class="grid grid-cols-5 gap-1.5 text-center text-xs font-bold">
                         <button type="button" onclick="selecionarPos('PG')" class="pos-btn bg-neutral-900 border border-neutral-700 py-2 rounded-xl" data-pos="PG">PG</button>
-                        <button type="button" onclick="selecionarPos('SG')" class="pos-btn bg-amber-500 text-neutral-950 py-2 rounded-xl" data-pos="SG">SG</button>
+                        <button type="button" onclick="selecionarPos('SG')" class="pos-btn bg-amber-500 text-neutral-950 py-2 rounded-xl font-bold" data-pos="SG">SG</button>
                         <button type="button" onclick="selecionarPos('SF')" class="pos-btn bg-neutral-900 border border-neutral-700 py-2 rounded-xl" data-pos="SF">SF</button>
                         <button type="button" onclick="selecionarPos('PF')" class="pos-btn bg-neutral-900 border border-neutral-700 py-2 rounded-xl" data-pos="PF">PF</button>
                         <button type="button" onclick="selecionarPos('C')" class="pos-btn bg-neutral-900 border border-neutral-700 py-2 rounded-xl" data-pos="C">C</button>
                     </div>
                 </div>
 
-                <button onclick="salvarIdentidade()" class="w-full mt-4 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3 rounded-xl uppercase text-sm transition shadow-lg">
+                <button onclick="salvarIdentidade()" class="w-full mt-4 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3 rounded-xl uppercase text-sm transition shadow-lg shadow-amber-500/30">
                     Próximo: Roubar Atributos dos Craques 🧬
                 </button>
             </div>
@@ -93,49 +96,49 @@
         <div id="step-dna" class="hidden glass rounded-3xl p-6 shadow-2xl">
             <div class="text-center mb-4">
                 <h2 class="text-2xl font-black uppercase text-white">Roube o DNA dos Craques</h2>
-                <p class="text-xs text-slate-400 mt-1">Escolha 1 entre 4 lendas sorteadas por atributo</p>
+                <p class="text-xs text-slate-400 mt-1">Escolha 1 entre 4 lendas sorteadas por fundamento</p>
             </div>
 
             <div class="space-y-2.5">
                 <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
                     <div>
                         <div class="text-[11px] font-bold text-amber-500">🎯 ARREMESSO</div>
-                        <div id="val-arremesso" class="text-xs text-slate-400">Pressione girar...</div>
+                        <div id="val-arremesso" class="text-xs font-semibold text-slate-400">Pressione girar...</div>
                     </div>
                     <button onclick="abrirRoleta('arremesso', '🎯 Arremesso')" id="btn-arremesso" class="bg-amber-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
                 </div>
                 <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
                     <div>
-                        <div class="text-[11px] font-bold text-sky-400">🧠 PLAYMAKING</div>
-                        <div id="val-playmaking" class="text-xs text-slate-400">Pressione girar...</div>
+                        <div class="text-[11px] font-bold text-sky-400">🧠 PLAYMAKING & QI</div>
+                        <div id="val-playmaking" class="text-xs font-semibold text-slate-400">Pressione girar...</div>
                     </div>
                     <button onclick="abrirRoleta('playmaking', '🧠 Playmaking')" id="btn-playmaking" class="bg-sky-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
                 </div>
                 <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
                     <div>
                         <div class="text-[11px] font-bold text-emerald-400">🔒 DEFESA</div>
-                        <div id="val-defesa" class="text-xs text-slate-400">Pressione girar...</div>
+                        <div id="val-defesa" class="text-xs font-semibold text-slate-400">Pressione girar...</div>
                     </div>
                     <button onclick="abrirRoleta('defesa', '🔒 Defesa')" id="btn-defesa" class="bg-emerald-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
                 </div>
                 <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
                     <div>
                         <div class="text-[11px] font-bold text-purple-400">🏀 REBOTES</div>
-                        <div id="val-rebotes" class="text-xs text-slate-400">Pressione girar...</div>
+                        <div id="val-rebotes" class="text-xs font-semibold text-slate-400">Pressione girar...</div>
                     </div>
                     <button onclick="abrirRoleta('rebotes', '🏀 Rebotes')" id="btn-rebotes" class="bg-purple-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
                 </div>
                 <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
                     <div>
                         <div class="text-[11px] font-bold text-rose-500">⚡ FÍSICO</div>
-                        <div id="val-fisico" class="text-xs text-slate-400">Pressione girar...</div>
+                        <div id="val-fisico" class="text-xs font-semibold text-slate-400">Pressione girar...</div>
                     </div>
                     <button onclick="abrirRoleta('fisico', '⚡ Físico')" id="btn-fisico" class="bg-rose-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
                 </div>
                 <div class="bg-neutral-950 border border-neutral-800 rounded-xl p-3 flex items-center justify-between">
                     <div>
-                        <div class="text-[11px] font-bold text-red-400">🐍 CLUTCH</div>
-                        <div id="val-clutch" class="text-xs text-slate-400">Pressione girar...</div>
+                        <div class="text-[11px] font-bold text-red-400">🐍 CLUTCH & DECISÃO</div>
+                        <div id="val-clutch" class="text-xs font-semibold text-slate-400">Pressione girar...</div>
                     </div>
                     <button onclick="abrirRoleta('clutch', '🐍 Clutch')" id="btn-clutch" class="bg-red-600 text-white font-bold py-1 px-3 rounded-lg text-xs">Girar</button>
                 </div>
@@ -154,25 +157,24 @@
             <div class="bg-neutral-950 border border-neutral-800 rounded-2xl p-6 my-4">
                 <div id="draft-logo" class="text-5xl mb-2">🎰</div>
                 <div id="draft-time" class="text-xl font-extrabold text-white">Sorteando Franquia...</div>
-                <div id="draft-status" class="text-xs text-slate-400 mt-1">Aguarde o comissário...</div>
+                <div id="draft-status" class="text-xs text-slate-400 mt-1">Aguarde o comissário da NBA...</div>
             </div>
 
-            <button onclick="sortearDraft()" id="btn-roleta-draft" class="w-full bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3 rounded-xl uppercase text-sm transition">
+            <button onclick="sortearDraft()" id="btn-roleta-draft" class="w-full bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3 rounded-xl uppercase text-sm transition shadow-lg">
                 Girar Draft 🏀
             </button>
-            <button onclick="entrarNaLiga()" id="btn-entrar-liga" class="hidden w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl uppercase text-sm transition">
+            <button onclick="entrarNaLiga()" id="btn-entrar-liga" class="hidden w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl uppercase text-sm transition shadow-lg">
                 Entrar na NBA e Começar Ano 1 🚀
             </button>
         </div>
 
         <!-- ================= FASE 4: O PAINEL DA TEMPORADA ATIVA ================= -->
         <div id="step-temporada" class="hidden space-y-4">
-            <!-- Box da Temporada Atual -->
             <div class="glass rounded-3xl p-5 shadow-2xl">
                 <div class="flex items-center justify-between border-b border-neutral-800 pb-3 mb-3">
                     <div>
-                        <span class="text-xs font-bold text-amber-500 uppercase tracking-widest" id="temp-titulo">TEMPORADA 1 (2024-25)</span>
-                        <h3 class="text-lg font-black text-white" id="temp-time-nome">Time: Los Angeles Lakers</h3>
+                        <span class="text-xs font-bold text-amber-500 uppercase tracking-widest" id="temp-titulo">TEMPORADA 1</span>
+                        <h3 class="text-lg font-black text-white" id="temp-time-nome">Franquia: Los Angeles Lakers</h3>
                     </div>
                     <button onclick="aposentarAgora()" class="bg-neutral-800 hover:bg-red-900 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">
                         Aposentar Carreira 🛑
@@ -180,15 +182,14 @@
                 </div>
 
                 <!-- Botão Principal: Simular Temporada -->
-                <button onclick="simularAno()" id="btn-jogar-ano" class="w-full bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3.5 rounded-xl uppercase text-sm transition shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2">
+                <button onclick="simularTemporadaAno()" id="btn-jogar-ano" class="w-full bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3.5 rounded-xl uppercase text-sm transition shadow-lg shadow-amber-500/30 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-play"></i> Simular Temporada & Playoffs
                 </button>
 
-                <!-- Resultado do Ano (Aparece após simular) -->
+                <!-- Relatório do Ano -->
                 <div id="resultado-ano-box" class="hidden mt-4 bg-neutral-950 border border-neutral-800 rounded-2xl p-4 text-left">
-                    <div class="text-xs font-black text-amber-400 uppercase tracking-wider mb-2">Relatório do Ano:</div>
+                    <div class="text-xs font-black text-amber-400 uppercase tracking-wider mb-2">Relatório da Temporada:</div>
                     
-                    <!-- Médias -->
                     <div class="grid grid-cols-4 gap-2 text-center mb-3">
                         <div class="bg-neutral-900 p-2 rounded-lg">
                             <div class="text-[10px] text-slate-400 font-bold">PPG (PTS)</div>
@@ -208,20 +209,17 @@
                         </div>
                     </div>
 
-                    <!-- Prêmios e Playoffs -->
                     <div class="text-xs space-y-1 text-slate-300">
                         <div>🏅 <b>Prêmios Individuais:</b> <span id="stat-premios" class="text-amber-400 font-bold">--</span></div>
                         <div>🏀 <b>Pós-temporada / Playoffs:</b> <span id="stat-playoffs" class="text-white font-bold">--</span></div>
                     </div>
 
-                    <!-- Janela da Off-season (Mercado de Transferências) -->
+                    <!-- Janela de Mercado / Off-season -->
                     <div class="mt-4 pt-3 border-t border-neutral-800">
                         <div class="text-xs font-black text-amber-500 uppercase tracking-wider mb-2">
-                            🏢 Off-season: Escolha onde jogar no próximo ano:
+                            🏢 Janela de Contratos: Escolha seu time para o próximo ano:
                         </div>
-                        <div id="propostas-container" class="space-y-2">
-                            <!-- Gerado dinamicamente -->
-                        </div>
+                        <div id="propostas-container" class="space-y-2"></div>
                     </div>
                 </div>
             </div>
@@ -241,21 +239,19 @@
                                 <th class="p-2">Playoffs</th>
                             </tr>
                         </thead>
-                        <tbody id="tabela-historico" class="divide-y divide-neutral-800">
-                            <!-- Inserido dinamicamente a cada ano -->
-                        </tbody>
+                        <tbody id="tabela-historico" class="divide-y divide-neutral-800"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ================= FASE 5: CARD FINAL APÓS APOSENTADORIA ================= -->
+        <!-- ================= FASE 5: CARD GOAT FINAL ================= -->
         <div id="step-card-final" class="hidden">
             <div id="goat-card" class="bg-gradient-to-b from-neutral-900 via-black to-neutral-950 border-2 border-amber-500 rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
                 <div class="absolute -top-4 -right-2 text-amber-500/10 text-9xl font-black pointer-events-none select-none">GOAT</div>
 
                 <div class="flex items-center justify-between border-b border-neutral-800 pb-3 mb-3">
-                    <span class="text-[10px] font-black tracking-widest text-amber-500 uppercase">CARREIRA LENDÁRIA CONCLUÍDA</span>
+                    <span class="text-[10px] font-black tracking-widest text-amber-500 uppercase">THE EXTREME GOAT</span>
                     <span id="final-tier" class="px-2.5 py-0.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 text-xs font-bold rounded-full">...</span>
                 </div>
 
@@ -266,7 +262,7 @@
 
                 <div class="my-2">
                     <div class="text-7xl font-black text-amber-400 tracking-tighter" id="final-ovr">--</div>
-                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">OVR Final</div>
+                    <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">OVR Final de Aposentadoria</div>
                 </div>
 
                 <div class="grid grid-cols-3 gap-2 text-left my-4">
@@ -295,6 +291,12 @@
                         <div class="text-lg font-black text-emerald-400" id="final-hof">Sim</div>
                     </div>
                 </div>
+
+                <!-- DNA das Lendas -->
+                <div class="text-left bg-neutral-950/40 p-2.5 rounded-xl border border-neutral-900 mt-2">
+                    <div class="text-[9px] font-bold text-slate-500 uppercase mb-1">DNA de Craques Roubado:</div>
+                    <div id="final-dna" class="text-[11px] text-slate-300 grid grid-cols-2 gap-1"></div>
+                </div>
             </div>
 
             <div class="mt-4 space-y-2">
@@ -307,10 +309,10 @@
             </div>
         </div>
 
-        <!-- MODAL THE FENÔMENO (ROULETTE 4 CRAQUES) -->
+        <!-- MODAL DE ROLETA (4 CRAQUES) -->
         <div id="modal-roleta" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
             <div class="glass rounded-3xl p-5 max-w-lg w-full text-center shadow-2xl border border-amber-500/40">
-                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Escolha 1 entre os 4:</span>
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Escolha 1 entre os 4 sorteados:</span>
                 <h3 id="modal-cat-nome" class="text-xl font-black text-amber-500 uppercase mt-1 mb-4">...</h3>
                 <div id="modal-cards-container" class="grid grid-cols-2 gap-3 mb-4"></div>
             </div>
@@ -319,12 +321,67 @@
     </main>
 
     <script>
-        const FRANQUIAS = {{ franquias | tojson }};
+        // BASE DE DADOS COMPLETA DE CRAQUES
+        const JOGADORES = [
+            {"nome": "Michael Jordan", "time": "Bulls", "stats": {"arremesso": 93, "playmaking": 88, "defesa": 98, "rebotes": 80, "fisico": 97, "clutch": 99}},
+            {"nome": "LeBron James", "time": "Lakers", "stats": {"arremesso": 86, "playmaking": 97, "defesa": 92, "rebotes": 88, "fisico": 99, "clutch": 95}},
+            {"nome": "Stephen Curry", "time": "Warriors", "stats": {"arremesso": 99, "playmaking": 91, "defesa": 72, "rebotes": 65, "fisico": 79, "clutch": 96}},
+            {"nome": "Kobe Bryant", "time": "Lakers", "stats": {"arremesso": 92, "playmaking": 85, "defesa": 95, "rebotes": 78, "fisico": 92, "clutch": 99}},
+            {"nome": "Shaquille O'Neal", "time": "Lakers", "stats": {"arremesso": 45, "playmaking": 70, "defesa": 93, "rebotes": 97, "fisico": 99, "clutch": 90}},
+            {"nome": "Dennis Rodman", "time": "Bulls", "stats": {"arremesso": 40, "playmaking": 65, "defesa": 98, "rebotes": 99, "fisico": 93, "clutch": 85}},
+            {"nome": "Magic Johnson", "time": "Lakers", "stats": {"arremesso": 82, "playmaking": 99, "defesa": 82, "rebotes": 85, "fisico": 88, "clutch": 94}},
+            {"nome": "Larry Bird", "time": "Celtics", "stats": {"arremesso": 96, "playmaking": 94, "defesa": 84, "rebotes": 89, "fisico": 78, "clutch": 98}},
+            {"nome": "Hakeem Olajuwon", "time": "Rockets", "stats": {"arremesso": 80, "playmaking": 75, "defesa": 99, "rebotes": 96, "fisico": 95, "clutch": 93}},
+            {"nome": "Wilt Chamberlain", "time": "Warriors", "stats": {"arremesso": 60, "playmaking": 78, "defesa": 96, "rebotes": 99, "fisico": 99, "clutch": 88}},
+            {"nome": "Bill Russell", "time": "Celtics", "stats": {"arremesso": 55, "playmaking": 80, "defesa": 99, "rebotes": 98, "fisico": 94, "clutch": 97}},
+            {"nome": "Kevin Durant", "time": "Suns", "stats": {"arremesso": 97, "playmaking": 86, "defesa": 85, "rebotes": 82, "fisico": 89, "clutch": 94}},
+            {"nome": "Nikola Jokic", "time": "Nuggets", "stats": {"arremesso": 90, "playmaking": 99, "defesa": 76, "rebotes": 95, "fisico": 85, "clutch": 95}},
+            {"nome": "Giannis Antetokounmpo", "time": "Bucks", "stats": {"arremesso": 72, "playmaking": 84, "defesa": 97, "rebotes": 94, "fisico": 99, "clutch": 91}},
+            {"nome": "Kawhi Leonard", "time": "Clippers", "stats": {"arremesso": 90, "playmaking": 80, "defesa": 98, "rebotes": 82, "fisico": 90, "clutch": 96}},
+            {"nome": "Tim Duncan", "time": "Spurs", "stats": {"arremesso": 84, "playmaking": 82, "defesa": 97, "rebotes": 96, "fisico": 90, "clutch": 94}},
+            {"nome": "Allen Iverson", "time": "76ers", "stats": {"arremesso": 88, "playmaking": 86, "defesa": 83, "rebotes": 55, "fisico": 88, "clutch": 93}},
+            {"nome": "Dwyane Wade", "time": "Heat", "stats": {"arremesso": 82, "playmaking": 88, "defesa": 92, "rebotes": 72, "fisico": 94, "clutch": 95}},
+            {"nome": "Kevin Garnett", "time": "Celtics", "stats": {"arremesso": 84, "playmaking": 83, "defesa": 98, "rebotes": 95, "fisico": 93, "clutch": 92}},
+            {"nome": "Dirk Nowitzki", "time": "Mavericks", "stats": {"arremesso": 95, "playmaking": 76, "defesa": 74, "rebotes": 88, "fisico": 82, "clutch": 95}},
+            {"nome": "Steve Nash", "time": "Suns", "stats": {"arremesso": 93, "playmaking": 98, "defesa": 65, "rebotes": 52, "fisico": 74, "clutch": 89}},
+            {"nome": "John Stockton", "time": "Jazz", "stats": {"arremesso": 85, "playmaking": 99, "defesa": 92, "rebotes": 60, "fisico": 78, "clutch": 90}},
+            {"nome": "Luka Doncic", "time": "Mavericks", "stats": {"arremesso": 91, "playmaking": 97, "defesa": 73, "rebotes": 87, "fisico": 84, "clutch": 96}},
+            {"nome": "Damian Lillard", "time": "Bucks", "stats": {"arremesso": 94, "playmaking": 88, "defesa": 68, "rebotes": 62, "fisico": 82, "clutch": 98}},
+            {"nome": "Kyrie Irving", "time": "Mavericks", "stats": {"arremesso": 94, "playmaking": 90, "defesa": 72, "rebotes": 60, "fisico": 83, "clutch": 97}},
+            {"nome": "Russell Westbrook", "time": "Clippers", "stats": {"arremesso": 74, "playmaking": 88, "defesa": 80, "rebotes": 88, "fisico": 96, "clutch": 81}},
+            {"nome": "James Harden", "time": "Clippers", "stats": {"arremesso": 92, "playmaking": 94, "defesa": 70, "rebotes": 75, "fisico": 85, "clutch": 82}},
+            {"nome": "Jimmy Butler", "time": "Heat", "stats": {"arremesso": 84, "playmaking": 84, "defesa": 93, "rebotes": 79, "fisico": 88, "clutch": 96}},
+            {"nome": "Joel Embiid", "time": "76ers", "stats": {"arremesso": 89, "playmaking": 78, "defesa": 92, "rebotes": 94, "fisico": 95, "clutch": 87}},
+            {"nome": "Victor Wembanyama", "time": "Spurs", "stats": {"arremesso": 85, "playmaking": 79, "defesa": 97, "rebotes": 93, "fisico": 90, "clutch": 88}},
+            {"nome": "Oscar Schmidt", "time": "Brasil", "stats": {"arremesso": 98, "playmaking": 75, "defesa": 65, "rebotes": 72, "fisico": 80, "clutch": 97}},
+            {"nome": "Klay Thompson", "time": "Mavericks", "stats": {"arremesso": 95, "playmaking": 70, "defesa": 87, "rebotes": 64, "fisico": 80, "clutch": 92}},
+            {"nome": "Draymond Green", "time": "Warriors", "stats": {"arremesso": 68, "playmaking": 90, "defesa": 96, "rebotes": 86, "fisico": 86, "clutch": 85}},
+            {"nome": "Ray Allen", "time": "Heat", "stats": {"arremesso": 97, "playmaking": 78, "defesa": 79, "rebotes": 65, "fisico": 82, "clutch": 96}},
+            {"nome": "Rudy Gobert", "time": "Timberwolves", "stats": {"arremesso": 42, "playmaking": 58, "defesa": 96, "rebotes": 95, "fisico": 91, "clutch": 65}},
+            {"nome": "Trae Young", "time": "Hawks", "stats": {"arremesso": 91, "playmaking": 93, "defesa": 52, "rebotes": 50, "fisico": 70, "clutch": 88}},
+            {"nome": "Kyle Kuzma", "time": "Wizards", "stats": {"arremesso": 78, "playmaking": 72, "defesa": 71, "rebotes": 76, "fisico": 80, "clutch": 68}},
+            {"nome": "Ben Simmons", "time": "Nets", "stats": {"arremesso": 40, "playmaking": 88, "defesa": 92, "rebotes": 86, "fisico": 91, "clutch": 45}}
+        ];
+
+        const FRANQUIAS = [
+            {"nome": "Los Angeles Lakers", "status": "Contender", "logo": "🟡🟣"},
+            {"nome": "Boston Celtics", "status": "Contender", "logo": "🟢⚪"},
+            {"nome": "Golden State Warriors", "status": "Playoffs", "logo": "🔵🟡"},
+            {"nome": "Miami Heat", "status": "Cultura Playoff", "logo": "🔴⚪"},
+            {"nome": "Chicago Bulls", "status": "Em Reconstrução", "logo": "🔴⚫"},
+            {"nome": "San Antonio Spurs", "status": "Jovem Promissor", "logo": "⚪⚫"},
+            {"nome": "New York Knicks", "status": "Contender", "logo": "🟠🔵"},
+            {"nome": "Dallas Mavericks", "status": "Contender", "logo": "🔵⚪"},
+            {"nome": "Denver Nuggets", "status": "Contender", "logo": "🟡🔵"},
+            {"nome": "Phoenix Suns", "status": "Supertime", "logo": "🟣🟠"},
+            {"nome": "Milwaukee Bucks", "status": "Contender", "logo": "🟢🦌"}
+        ];
+
         const buildAtributos = {};
+        const dnaNomes = {};
         let catAtual = "";
         let posicaoEscolhida = "SG";
 
-        // Estado da Carreira
         const player = {
             nome: "Baller",
             numero: 23,
@@ -337,8 +394,7 @@
             mvps: 0,
             fmvps: 0,
             allstars: 0,
-            pontosTotais: 0,
-            historico: []
+            pontosTotais: 0
         };
 
         function selecionarPos(pos) {
@@ -365,15 +421,19 @@
             document.getElementById("step-dna").classList.remove("hidden");
         }
 
-        async function abrirRoleta(cat, titulo) {
+        function abrirRoleta(cat, titulo) {
             catAtual = cat;
             document.getElementById("modal-cat-nome").innerText = titulo;
-            const res = await fetch(`/api/sortear-opcoes/${cat}`);
-            const opcoes = await res.json();
+            
+            // Embaralha e escolhe 4 aleatórios
+            const shuffled = [...JOGADORES].sort(() => 0.5 - Math.random());
+            const opcoes = shuffled.slice(0, 4);
+
             const container = document.getElementById("modal-cards-container");
             container.innerHTML = "";
 
             opcoes.forEach(j => {
+                const val = j.stats[cat] || 75;
                 const card = document.createElement("div");
                 card.className = "card-draft bg-neutral-950 border border-neutral-700 hover:border-amber-500 p-3 rounded-xl cursor-pointer text-left transition flex flex-col justify-between";
                 card.innerHTML = `
@@ -383,10 +443,10 @@
                     </div>
                     <div class="mt-3 flex items-center justify-between border-t border-neutral-800 pt-1.5">
                         <span class="text-[9px] uppercase font-bold text-slate-400">Atributo:</span>
-                        <span class="text-lg font-black text-amber-400">${j.valor}</span>
+                        <span class="text-lg font-black text-amber-400">${val}</span>
                     </div>
                 `;
-                card.onclick = () => escolherCraque(j.nome, j.valor);
+                card.onclick = () => escolherCraque(j.nome, val);
                 container.appendChild(card);
             });
 
@@ -395,6 +455,8 @@
 
         function escolherCraque(nome, valor) {
             buildAtributos[catAtual] = valor;
+            dnaNomes[catAtual] = `${nome} (${valor})`;
+
             document.getElementById(`val-${catAtual}`).innerHTML = `<span class="text-white font-bold">${nome}</span> (${valor})`;
             const btn = document.getElementById(`btn-${catAtual}`);
             btn.disabled = true;
@@ -408,7 +470,7 @@
                 document.getElementById("hud-ovr").innerText = player.ovr;
                 const btnDraft = document.getElementById("btn-iniciar-draft");
                 btnDraft.disabled = false;
-                btnDraft.className = "w-full mt-4 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3 rounded-xl uppercase text-sm cursor-pointer transition shadow-lg";
+                btnDraft.className = "w-full mt-4 bg-amber-500 hover:bg-amber-400 text-neutral-950 font-black py-3 rounded-xl uppercase text-sm cursor-pointer transition shadow-lg shadow-amber-500/30";
                 btnDraft.innerText = "🏀 ENTRAR NO DRAFT DA NBA";
             }
         }
@@ -459,54 +521,88 @@
             document.getElementById("btn-jogar-ano").classList.remove("hidden");
         }
 
-        async function simularAno() {
-            const reqPayload = {
-                idade: player.idade,
-                temporada_num: player.temporada,
-                ovr: player.ovr,
-                posicao: player.posicao,
-                time_atual: player.time,
-                arremesso: buildAtributos.arremesso,
-                playmaking: buildAtributos.playmaking,
-                defesa: buildAtributos.defesa,
-                rebotes: buildAtributos.rebotes,
-                fisico: buildAtributos.fisico,
-                clutch: buildAtributos.clutch
-            };
+        // MOTOR MATEMÁTICO DE CADA TEMPORADA (100% NO NAVEGADOR)
+        function simularTemporadaAno() {
+            // Evolução de OVR por idade
+            if (player.idade < 27) {
+                player.ovr = Math.min(99, player.ovr + (Math.random() > 0.4 ? 1 : 2));
+            } else if (player.idade > 33) {
+                player.ovr = Math.max(60, player.ovr - (Math.random() > 0.5 ? 1 : 2));
+            }
 
-            const res = await fetch("/api/simular-ano", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(reqPayload)
-            });
-            const data = await res.json();
+            const pot = player.ovr / 100.0;
+            const jogos = Math.floor(Math.random() * 12) + 70;
 
-            // Atualiza Player
-            player.idade = data.novo_idade;
-            player.ovr = data.novo_ovr;
-            player.pontosTotais += data.pts_totais_ano;
-            if (data.campeao) player.aneis += 1;
-            if (data.finals_mvp) player.fmvps += 1;
-            if (data.mvp) player.mvps += 1;
-            if (data.all_star) player.allstars += 1;
+            // Estatísticas
+            const basePts = (buildAtributos.arremesso * 0.28) + (player.ovr * 0.12);
+            const ppg = (Math.max(8.0, basePts + (Math.random() * 6 - 2.5))).toFixed(1);
 
-            // Renderiza Box do Ano
-            document.getElementById("stat-ppg").innerText = data.ppg;
-            document.getElementById("stat-rpg").innerText = data.rpg;
-            document.getElementById("stat-apg").innerText = data.apg;
-            document.getElementById("stat-campanha").innerText = data.campanha;
+            let baseReb = (buildAtributos.rebotes * 0.11) + (buildAtributos.fisico * 0.04);
+            if (["PF", "C"].includes(player.posicao)) baseReb += 4.5;
+            const rpg = (Math.max(2.0, baseReb + (Math.random() * 3 - 1))).toFixed(1);
+
+            let baseAst = (buildAtributos.playmaking * 0.10);
+            if (player.posicao === "PG") baseAst += 4.0;
+            const apg = (Math.max(1.5, baseAst + (Math.random() * 3 - 1))).toFixed(1);
+
+            player.pontosTotais += Math.floor(parseFloat(ppg) * jogos);
+
+            // Campanha e Prêmios
+            const vit = Math.min(68, Math.max(25, Math.floor((player.ovr * 0.6) + (Math.random() * 22 - 8))));
+            const der = 82 - vit;
+            const allStar = Math.random() < Math.pow(pot, 1.3) * 0.95;
+            const mvp = (player.ovr >= 92) && (Math.random() < Math.pow(pot, 3.2) * 0.45);
+
+            if (allStar) player.allstars += 1;
+            if (mvp) player.mvps += 1;
+
+            // Playoffs
+            let campeao = false;
+            let fmvp = false;
+            let resumoPlayoff = "Não foi aos Playoffs (Férias mais cedo)";
+            
+            if (vit >= 41) {
+                const ptsDecisivo = Math.floor(parseFloat(ppg) + (Math.random() * 18 - 4));
+                const fatorTitulo = (buildAtributos.clutch * 0.5 + player.ovr * 0.5) / 100;
+                if (vit >= 50 && Math.random() < Math.pow(fatorTitulo, 2.1) * 0.48) {
+                    campeao = true;
+                    player.aneis += 1;
+                    if (Math.random() < 0.85) {
+                        fmvp = true;
+                        player.fmvps += 1;
+                    }
+                    resumoPlayoff = `🏆 CAMPEÃO DA NBA! (Você fez ${ptsDecisivo} pts no Jogo 7 das Finais!)`;
+                } else {
+                    const fases = ["1ª Rodada", "Semifinais de Conferência", "Finais de Conferência", "Vice-campeão nas Finais"];
+                    const fase = fases[Math.floor(Math.random() * fases.length)];
+                    resumoPlayoff = `Eliminado (${fase}) • Você fez ${ptsDecisivo} pts no jogo decisivo.`;
+                }
+            }
+
+            // Exibe no Relatório
+            document.getElementById("stat-ppg").innerText = ppg;
+            document.getElementById("stat-rpg").innerText = rpg;
+            document.getElementById("stat-apg").innerText = apg;
+            document.getElementById("stat-campanha").innerText = `${vit}-${der}`;
 
             const premios = [];
-            if (data.mvp) premios.push("🏆 MVP da Liga");
-            if (data.all_star) premios.push("⭐ All-Star");
-            document.getElementById("stat-premios").innerText = premios.length ? premios.join(" | ") : "Nenhum prêmio este ano";
-            document.getElementById("stat-playoffs").innerText = data.resumo_playoff;
+            if (mvp) premios.push("🏆 MVP da Temporada");
+            if (allStar) premios.push("⭐ All-Star");
+            document.getElementById("stat-premios").innerText = premios.length ? premios.join(" | ") : "Nenhum prêmio individual este ano";
+            document.getElementById("stat-playoffs").innerText = resumoPlayoff;
 
-            // Propostas de Transferência
+            // Propostas de Mercado
+            const outras = FRANQUIAS.filter(f => f.nome !== player.time);
+            const shuffled = [...outras].sort(() => 0.5 - Math.random());
+            const propostas = [
+                { time: player.time, status: "Renovação (Permanecer Fiel à Franquia)", salario: `$${Math.floor(player.ovr * 0.45 + 10)}M/ano` },
+                { time: shuffled[0].nome, status: shuffled[0].status, salario: `$${Math.floor(player.ovr * 0.45 + 14)}M/ano` },
+                { time: shuffled[1].nome, status: shuffled[1].status, salario: `$${Math.floor(player.ovr * 0.45 + 8)}M/ano` }
+            ];
+
             const propContainer = document.getElementById("propostas-container");
             propContainer.innerHTML = "";
-
-            data.propostas_offseason.forEach(p => {
+            propostas.forEach(p => {
                 const btn = document.createElement("button");
                 btn.className = "w-full bg-neutral-900 border border-neutral-700 hover:border-amber-500 p-2.5 rounded-xl text-left flex items-center justify-between transition";
                 btn.innerHTML = `
@@ -520,16 +616,16 @@
                 propContainer.appendChild(btn);
             });
 
-            // Insere na Tabela Histórica
+            // Adiciona na Tabela Histórica
             const tabela = document.getElementById("tabela-historico");
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td class="p-2 font-bold">Ano ${player.temporada}</td>
                 <td class="p-2">${player.time}</td>
-                <td class="p-2 font-black text-white">${data.ppg}</td>
-                <td class="p-2 text-purple-400">${data.rpg}</td>
-                <td class="p-2 text-sky-400">${data.apg}</td>
-                <td class="p-2 ${data.campeao ? 'text-amber-400 font-black' : 'text-slate-400'}">${data.campeao ? '🏆 Campeão' : 'Eliminado'}</td>
+                <td class="p-2 font-black text-white">${ppg}</td>
+                <td class="p-2 text-purple-400">${rpg}</td>
+                <td class="p-2 text-sky-400">${apg}</td>
+                <td class="p-2 ${campeao ? 'text-amber-400 font-black' : 'text-slate-400'}">${campeao ? '🏆 Campeão' : 'Eliminado'}</td>
             `;
             tabela.prepend(tr);
 
@@ -539,6 +635,7 @@
 
         function escolherDestino(novoTime) {
             player.time = novoTime;
+            player.idade += 1;
             player.temporada += 1;
             atualizarPainelTemporada();
         }
@@ -566,6 +663,16 @@
             else if (player.allstars >= 4) tier = "🔥 ALL-STAR CONSAGRADO";
 
             document.getElementById("final-tier").innerText = tier;
+
+            document.getElementById("final-dna").innerHTML = `
+                <div>🎯 ${dnaNomes.arremesso || '--'}</div>
+                <div>🧠 ${dnaNomes.playmaking || '--'}</div>
+                <div>🔒 ${dnaNomes.defesa || '--'}</div>
+                <div>🏀 ${dnaNomes.rebotes || '--'}</div>
+                <div>⚡ ${dnaNomes.fisico || '--'}</div>
+                <div>🐍 ${dnaNomes.clutch || '--'}</div>
+            `;
+
             document.getElementById("step-card-final").classList.remove("hidden");
         }
 
